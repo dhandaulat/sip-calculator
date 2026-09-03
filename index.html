@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional SIP Calculator - Calculate Your Mutual Fund Returns</title>
+    <title>धन्दाउलत - ऑल-इन-वन फाइनेंस कैलकुलेटर</title>
     <style>
         :root {
-            --primary-color: #00d285;
-            --primary-dark: #00b371;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #2d3748;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
         }
         * {
             box-sizing: border-box;
@@ -21,280 +21,648 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        header h1 {
-            color: var(--text-main);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        header p {
-            color: var(--text-muted);
-        }
-        .calculator-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        .calc-wrapper {
+            background: var(--card);
+            max-width: 900px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             padding: 30px;
+            border: 1px solid var(--border);
+        }
+        .calc-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .calc-header h1 {
+            color: var(--text);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .calc-header p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-            margin-bottom: 40px;
         }
         @media (max-width: 768px) {
-            .calculator-card {
+            .tab-content.active {
                 grid-template-columns: 1fr;
-                gap: 30px;
-                padding: 20px;
+                gap: 25px;
             }
         }
         .input-group {
             margin-bottom: 25px;
         }
-        .input-label-container {
+        .input-label-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
         }
-        .input-label {
-            font-weight: 600;
-            color: var(--text-main);
+        .input-label-row label {
+            font-weight: 500;
+            font-size: 15px;
         }
-        .input-value-display {
-            background: #eefcf7;
-            color: var(--primary-dark);
+        .val-display {
+            background: #f1f5f9;
             padding: 4px 12px;
             border-radius: 6px;
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--primary-dark);
+            border: 1px solid var(--border);
         }
-        .slider {
-            -webkit-appearance: none;
+        input[type="range"] {
             width: 100%;
+            accent-color: var(--primary);
             height: 6px;
             border-radius: 5px;
-            background: var(--border-color);
-            outline: none;
-            margin-top: 10px;
-        }
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
             cursor: pointer;
-            transition: transform 0.1s;
         }
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-        .results-section {
+        .output-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: #fafafa;
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
         }
-        .result-item {
+        .out-row {
             display: flex;
             justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border);
         }
-        .result-item:last-child {
+        .out-row:last-child {
             border-bottom: none;
-            padding-top: 20px;
+            margin-top: 10px;
+            padding-top: 15px;
         }
-        .result-label {
-            color: var(--text-muted);
-            font-weight: 500;
+        .out-label {
+            color: var(--muted);
+            font-size: 15px;
         }
-        .result-value {
+        .out-val {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .out-row.total .out-label {
             font-weight: 700;
-            font-size: 1.1rem;
+            color: var(--text);
+            font-size: 18px;
         }
-        .total-value {
+        .out-row.total .out-val {
+            font-size: 22px;
             color: var(--primary-dark);
-            font-size: 1.5rem;
-        }
-        .article-section {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            margin-bottom: 40px;
-        }
-        .article-section h2 {
-            color: var(--text-main);
-            margin-top: 25px;
-            margin-bottom: 12px;
-            font-size: 1.6rem;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 5px;
-            display: inline-block;
-        }
-        .article-section h2:first-child {
-            margin-top: 0;
-        }
-        .article-section p {
-            color: #4a5568;
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        .article-section ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-            color: #4a5568;
-        }
-        .article-section li {
-            margin-bottom: 8px;
-        }
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-        }
-        .disclaimer {
-            background: #fffaf0;
-            border-left: 4px solid #dd6b20;
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: #7b341e;
-            margin-top: 20px;
-            text-align: left;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>SIP Calculator</h1>
-        <p>Calculate your Mutual Fund Systematic Investment Plan (SIP) returns instantly.</p>
-    </header>
-    <div class="calculator-card">
-        <div class="inputs-section">
+
+<div class="calc-wrapper">
+    <div class="calc-header">
+        <h1>धनदौलत कैलकुलेटरHub</h1>
+        <p>अपने सभी वित्तीय लक्ष्यों की गणना एक ही स्थान पर करें</p>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'sip')">📊 SIP</button>
+        <button class="tab-btn" onclick="switchTab(event, 'lumpsum')">💰 Lumpsum</button>
+        <button class="tab-btn" onclick="switchTab(event, 'emi')">🏠 Loan EMI</button>
+        <button class="tab-btn" onclick="switchTab(event, 'inflation')">📈 Inflation</button>
+    </div>
+
+    <!-- 1. SIP Calculator -->
+    <div id="sip" class="tab-content active">
+        <div class="inputs-side">
             <div class="input-group">
-                <div class="input-label-container">
-                    <span class="input-label">Monthly Investment</span>
-                    <span class="input-value-display">₹<span id="monthlyInvestmentVal">25,000</span></span>
+                <div class="input-label-row">
+                    <label>मासिक निवेश</label>
+                    <span class="val-display">₹<span id="sip_amt_txt">25,000</span></span>
                 </div>
-                <input type="range" min="500" max="100000" step="500" value="25000" class="slider" id="monthlyInvestment">
+                <input type="range" id="sip_amt" min="500" max="500000" step="500" value="25000" oninput="calcSIP()">
             </div>
             <div class="input-group">
-                <div class="input-label-container">
-                    <span class="input-label">Expected Return Rate (p.a)</span>
-                    <span class="input-value-display"><span id="expectedReturnVal">12</span>%</span>
+                <div class="input-label-row">
+                    <label>अनुमानित रिटर्न दर (p.a.)</label>
+                    <span class="val-display"><span id="sip_rate_txt">12</span>%</span>
                 </div>
-                <input type="range" min="1" max="30" step="0.5" value="12" class="slider" id="expectedReturn">
+                <input type="range" id="sip_rate" min="1" max="30" step="0.5" value="12" oninput="calcSIP()">
             </div>
             <div class="input-group">
-                <div class="input-label-container">
-                    <span class="input-label">Time Period (Years)</span>
-                    <span class="input-value-display"><span id="timePeriodVal">10</span> Yr</span>
+                <div class="input-label-row">
+                    <label>समय अवधि</label>
+                    <span class="val-display"><span id="sip_years_txt">10</span> Yr</span>
                 </div>
-                <input type="range" min="1" max="40" step="1" value="10" class="slider" id="timePeriod">
+                <input type="range" id="sip_years" min="1" max="40" step="1" value="10" oninput="calcSIP()">
             </div>
         </div>
-        <div class="results-section">
-            <div class="result-item">
-                <span class="result-label">Invested Amount</span>
-                <span class="result-value">₹<span id="totalInvested">0</span></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Est. Returns</span>
-                <span class="result-value">₹<span id="estimatedReturns">0</span></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Total Value</span>
-                <span class="result-value total-value">₹<span id="totalValue">0</span></span>
-            </div>
+        <div class="output-box">
+            <div class="out-row"><span class="out-label">कुल निवेशित राशि</span><span class="out-val" id="sip_invested">₹0</span></div>
+            <div class="out-row"><span class="out-label">अनुमानित रिटर्न</span><span class="out-val" id="sip_returns">₹0</span></div>
+            <div class="out-row total"><span class="out-label">कुल भविष्य मूल्य</span><span class="out-val" id="sip_total">₹0</span></div>
         </div>
     </div>
-    <div class="article-section">
-        <h2>What is a Systematic Investment Plan (SIP)?</h2>
-        <p>A Systematic Investment Plan (SIP) is a smart and hassle-free mode for investing money in mutual funds. SIP allows you to invest a fixed amount of money at regular intervals (monthly, quarterly, or weekly) rather than making a one-time lump-sum investment. It instills financial discipline and helps you build wealth over the long term without worrying about market fluctuations.</p>
-        <h2>How Does a SIP Calculator Work?</h2>
-        <p>Our online SIP calculator uses a specific financial formula to estimate the future value of your monthly investments. You just need to input three simple values: your monthly investment amount, the expected annual rate of return, and the total tenure of investment. The calculator applies the compounding interest formula calculated monthly to give you real-time results instantly.</p>
-        <h2>The SIP Formula</h2>
-        <p>The mathematical formula used to calculate SIP returns is as follows:</p>
-        <p style="background: #f7fafc; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; text-align: center; font-weight: bold; margin: 15px 0;">
-            M = P &times; [ ({1 + i}<sup>n</sup> - 1) / i ] &times; (1 + i)
-        </p>
-        <p>Where:</p>
-        <ul>
-            <li><strong>M:</strong> The future amount you will receive upon maturity.</li>
-            <li><strong>P:</strong> The monthly amount you invest via SIP.</li>
-            <li><strong>i:</strong> Periodic rate of return (Annual Rate divided by 12 and then by 100).</li>
-            <li><strong>n:</strong> Total number of monthly installments (Years &times; 12).</li>
-        </ul>
-        <h2>Benefits of Investing via SIP</h2>
-        <p>Investing in mutual funds through a SIP offers multiple compounding advantages over traditional saving methods:</p>
-        <ul>
-            <li><strong>Power of Compounding:</strong> When you invest regularly, your earned returns are reinvested, which generates further returns over time. The earlier you start, the bigger the corpus.</li>
-            <li><strong>Rupee Cost Averaging:</strong> Since you invest a fixed amount every month, you automatically buy more mutual fund units when the market is low and fewer units when the market is high. This averages out the overall purchase cost.</li>
-            <li><strong>No Need to Time the Market:</strong> Trying to predict stock market highs and lows is risky. SIP eliminates this guesswork completely, making it safer for retail investors.</li>
-            <li><strong>Convenience and Flexibility:</strong> You can start with an amount as low as ₹500 per month. You can also pause, stop, or step up your investment whenever you want.</li>
-        </ul>
-        
-        <div class="disclaimer">
-            <strong>Disclaimer:</strong> This SIP calculator is designed for educational and illustrative purposes only. Mutual fund investments are subject to market risks. Past performance is not a reliable indicator of future results. We are not a SEBI-registered financial advisor; please consult a certified financial planner before making any investment decisions.
+
+    <!-- 2. Lumpsum Calculator -->
+    <div id="lumpsum" class="tab-content">
+        <div class="inputs-side">
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>कुल एकमुश्त निवेश</label>
+                    <span class="val-display">₹<span id="lump_amt_txt">1,00,000</span></span>
+                </div>
+                <input type="range" id="lump_amt" min="5000" max="10000000" step="5000" value="100000" oninput="calcLumpsum()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>अनुमानित रिटर्न दर (p.a.)</label>
+                    <span class="val-display"><span id="lump_rate_txt">12</span>%</span>
+                </div>
+                <input type="range" id="lump_rate" min="1" max="30" step="0.5" value="12" oninput="calcLumpsum()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>समय अवधि</label>
+                    <span class="val-display"><span id="lump_years_txt">10</span> Yr</span>
+                </div>
+                <input type="range" id="lump_years" min="1" max="40" step="1" value="10" oninput="calcLumpsum()">
+            </div>
+        </div>
+        <div class="output-box">
+            <div class="out-row"><span class="out-label">निवेशित राशि</span><span class="out-val" id="lump_invested">₹0</span></div>
+            <div class="out-row"><span class="out-label">अनुमानित रिटर्न</span><span class="out-val" id="lump_returns">₹0</span></div>
+            <div class="out-row total"><span class="out-label">कुल भविष्य मूल्य</span><span class="out-val" id="lump_total">₹0</span></div>
         </div>
     </div>
-    <footer>
-        <p>&copy; 2026 Dhandaula. Built with GitHub Pages.</p>
-    </footer>
-</div>
+
+    <!-- 3. Loan EMI Calculator -->
+    <div id="emi" class="tab-content">
+        <div class="inputs-side">
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>लोन राशि</label>
+                    <span class="val-display">₹<span id="emi_amt_txt">5,00,000</span></span>
+                </div>
+                <input type="range" id="emi_amt" min="10000" max="20000000" step="10000" value="500000" oninput="calcEMI()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>ब्याज दर (p.a.)</label>
+                    <span class="val-display"><span id="emi_rate_txt">8.5</span>%</span>
+                </div>
+                <input type="range" id="emi_rate" min="5" max="20" step="0.1" value="8.5" oninput="calcEMI()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>लोन अवधि</label>
+                    <span class="val-display"><span id="emi_years_txt">5</span> Yr</span>
+                </div>
+                मैं आपकी बात पूरी तरह समझ गया। पिछली बार कोड बॉक्स के नीचे छिप जाने के कारण आपको पूरा कोड नहीं मिल पाया। इसके लिए मैं माफी चाहता हूँ।
+इस बार मैं पूरा कोड दो अलग-अलग छोटे हिस्सों में दे रहा हूँ ताकि कोई भी लाइन गायब न हो। आप दोनों हिस्सों को एक-एक करके आराम से कॉपी कर सकते हैं।
+## 📋 हिस्सा 1: इसे कॉपी करें (HTML और CSS स्टाइल)
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>धन्दाउलत - ऑल-इन-वन फाइनेंस कैलकुलेटर</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .calc-wrapper {
+            background: var(--card);
+            max-width: 900px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+        .calc-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .calc-header h1 {
+            color: var(--text);
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .calc-header p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border);
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) {
+            .tab-content.active {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        .input-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .input-label-row label {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        .val-display {
+            background: #f1f5f9;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            border: 1px solid var(--border);
+        }
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary);
+            height: 6px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .output-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+        .out-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .out-row:last-child {
+            border-bottom: none;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+        .out-label {
+            color: var(--muted);
+            font-size: 15px;
+        }
+        .out-val {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .out-row.total .out-label {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 18px;
+        }
+        .out-row.total .out-val {
+            font-size: 22px;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calc-wrapper">
+    <div class="calc-header">
+        <h1>धनदौलत कैलकुलेटरHub</h1>
+        <p>अपने सभी वित्तीय लक्ष्यों की गणना एक ही स्थान पर करें</p>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'sip')">📊 SIP</button>
+        <button class="tab-btn" onclick="switchTab(event, 'lumpsum')">💰 Lumpsum</button>
+        <button class="tab-btn" onclick="switchTab(event, 'emi')">🏠 Loan EMI</button>
+        <button class="tab-btn" onclick="switchTab(event, 'inflation')">📈 Inflation</button>
+    </div>
+
+    <!-- 1. SIP Calculator -->
+    <div id="sip" class="tab-content active">
+        <div class="inputs-side">
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>मासिक निवेश</label>
+                    <span class="val-display">₹<span id="sip_amt_txt">25,000</span></span>
+                </div>
+                <input type="range" id="sip_amt" min="500" max="500000" step="500" value="25000" oninput="calcSIP()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>अनुमानित रिटर्न दर (p.a.)</label>
+                    <span class="val-display"><span id="sip_rate_txt">12</span>%</span>
+                </div>
+                <input type="range" id="sip_rate" min="1" max="30" step="0.5" value="12" oninput="calcSIP()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>समय अवधि</label>
+                    <span class="val-display"><span id="sip_years_txt">10</span> Yr</span>
+                </div>
+                <input type="range" id="sip_years" min="1" max="40" step="1" value="10" oninput="calcSIP()">
+            </div>
+        </div>
+        <div class="output-box">
+            <div class="out-row"><span class="out-label">कुल निवेशित राशि</span><span class="out-val" id="sip_invested">₹0</span></div>
+            <div class="out-row"><span class="out-label">अनुमानित रिटर्न</span><span class="out-val" id="sip_returns">₹0</span></div>
+            <div class="out-row total"><span class="out-label">कुल भविष्य मूल्य</span><span class="out-val" id="sip_total">₹0</span></div>
+        </div>
+    </div>
+
+    <!-- 2. Lumpsum Calculator -->
+    <div id="lumpsum" class="tab-content">
+        <div class="inputs-side">
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>कुल एकमुश्त निवेश</label>
+                    <span class="val-display">₹<span id="lump_amt_txt">1,00,000</span></span>
+                </div>
+                <input type="range" id="lump_amt" min="5000" max="10000000" step="5000" value="100000" oninput="calcLumpsum()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>अनुमानित रिटर्न दर (p.a.)</label>
+                    <span class="val-display"><span id="lump_rate_txt">12</span>%</span>
+                </div>
+                <input type="range" id="lump_rate" min="1" max="30" step="0.5" value="12" oninput="calcLumpsum()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>समय अवधि</label>
+                    <span class="val-display"><span id="lump_years_txt">10</span> Yr</span>
+                </div>
+                <input type="range" id="lump_years" min="1" max="40" step="1" value="10" oninput="calcLumpsum()">
+            </div>
+        </div>
+        <div class="output-box">
+            <div class="out-row"><span class="out-label">निवेशित राशि</span><span class="out-val" id="lump_invested">₹0</span></div>
+            <div class="out-row"><span class="out-label">अनुमानित रिटर्न</span><span class="out-val" id="lump_returns">₹0</span></div>
+            <div class="out-row total"><span class="out-label">कुल भविष्य मूल्य</span><span class="out-val" id="lump_total">₹0</span></div>
+        </div>
+    </div>
+
+    <!-- 3. Loan EMI Calculator -->
+    <div id="emi" class="tab-content">
+        <div class="inputs-side">
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>लोन राशि</label>
+                    <span class="val-display">₹<span id="emi_amt_txt">5,00,000</span></span>
+                </div>
+                <input type="range" id="emi_amt" min="10000" max="20000000" step="10000" value="500000" oninput="calcEMI()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>ब्याज दर (p.a.)</label>
+                    <span class="val-display"><span id="emi_rate_txt">8.5</span>%</span>
+                </div>
+                <input type="range" id="emi_rate" min="5" max="20" step="0.1" value="8.5" oninput="calcEMI()">
+            </div>
+            <div class="input-group">
+                <div class="input-label-row">
+                    <label>लोन अवधि</label>
+                    <span class="val-display"><span id="emi_years_txt">5</span> Yr</span>
+                </div>
+
+मूल लोन राशि₹0
+कुल देय ब्याज₹0
+कुल देय राशि₹0
+मासिक EMI₹0
+
+₹50,000
+
+
+
+
+6%
+
+
+
+
+10 Yr
+
+
+
+
+
+वर्तमान कीमत₹0
+भविष्य में आवश्यक कीमत₹0
+
+
+
+---
+
+### 📋 हिस्सा 2: इसे हिस्सा 1 के ठीक नीचे पेस्ट करें (JavaScript और क्लोजिंग टैग)
+
+```javascript
 <script>
-    const monthlyInvestmentInput = document.getElementById('monthlyInvestment');
-    const expectedReturnInput = document.getElementById('expectedReturn');
-    const timePeriodInput = document.getElementById('timePeriod');
-    const monthlyInvestmentVal = document.getElementById('monthlyInvestmentVal');
-    const expectedReturnVal = document.getElementById('expectedReturnVal');
-    const timePeriodVal = document.getElementById('timePeriodVal');
-    const totalInvestedDisplay = document.getElementById('totalInvested');
-    const estimatedReturnsDisplay = document.getElementById('estimatedReturns');
-    const totalValueDisplay = document.getElementById('totalValue');
-    function formatIndianCurrency(num) {
-        return num.toLocaleString('en-IN');
+    function switchTab(evt, tabId) {
+        let contents = document.querySelectorAll(".tab-content");
+        contents.forEach(content => content.classList.remove("active"));
+        let buttons = document.querySelectorAll(".tab-btn");
+        buttons.forEach(btn => btn.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        if(tabId === 'sip') calcSIP();
+        if(tabId === 'lumpsum') calcLumpsum();
+        if(tabId === 'emi') calcEMI();
+        if(tabId === 'inflation') calcInflation();
     }
-    function calculateSIP() {
-        const P = parseFloat(monthlyInvestmentInput.value);
-        const annualRate = parseFloat(expectedReturnInput.value);
-        const years = parseFloat(timePeriodInput.value);
-        monthlyInvestmentVal.innerText = formatIndianCurrency(P);
-        expectedReturnVal.innerText = annualRate;
-        timePeriodVal.innerText = years;
-        const i = (annualRate / 12) / 100;
-        const n = years * 12;
-        const totalValue = P * [ (Math.pow(1 + i, n) - 1) / i ] * (1 + i);
-        const totalInvested = P * n;
-        const estimatedReturns = totalValue - totalInvested;
-        totalInvestedDisplay.innerText = formatIndianCurrency(Math.round(totalInvested));
-        estimatedReturnsDisplay.innerText = formatIndianCurrency(Math.round(estimatedReturns));
-        totalValueDisplay.innerText = formatIndianCurrency(Math.round(totalValue));
+
+    function formatINR(num) {
+        return num.toLocaleString('en-IN', { maximumFractionDigits: 0 });
     }
-    monthlyInvestmentInput.addEventListener('input', calculateSIP);
-    expectedReturnInput.addEventListener('input', calculateSIP);
-    timePeriodInput.addEventListener('input', calculateSIP);
-    calculateSIP();
+
+    function calcSIP() {
+        let P = parseFloat(document.getElementById("sip_amt").value);
+        let r = parseFloat(document.getElementById("sip_rate").value) / 12 / 100;
+        let n = parseFloat(document.getElementById("sip_years").value) * 12;
+        document.getElementById("sip_amt_txt").innerText = formatINR(P);
+        document.getElementById("sip_rate_txt").innerText = document.getElementById("sip_rate").value;
+        document.getElementById("sip_years_txt").innerText = document.getElementById("sip_years").value;
+        let totalValue = P * [Math.pow(1 + r, n) - 1] / r * (1 + r);
+        let investedValue = P * n;
+        let estReturns = totalValue - investedValue;
+        document.getElementById("sip_invested").innerText = "₹" + formatINR(investedValue);
+        document.getElementById("sip_returns").innerText = "₹" + formatINR(estReturns);
+        document.getElementById("sip_total").innerText = "₹" + formatINR(totalValue);
+    }
+
+    function calcLumpsum() {
+        let P = parseFloat(document.getElementById("lump_amt").value);
+        let r = parseFloat(document.getElementById("lump_rate").value) / 100;
+        let n = parseFloat(document.getElementById("lump_years").value);
+        document.getElementById("lump_amt_txt").innerText = formatINR(P);
+        document.getElementById("lump_rate_txt").innerText = document.getElementById("lump_rate").value;
+        document.getElementById("lump_years_txt").innerText = document.getElementById("lump_years").value;
+        let totalValue = P * Math.pow(1 + r, n);
+        let estReturns = totalValue - P;
+        document.getElementById("lump_invested").innerText = "₹" + formatINR(P);
+        document.getElementById("lump_returns").innerText = "₹" + formatINR(estReturns);
+        document.getElementById("lump_total").innerText = "₹" + formatINR(totalValue);
+    }
+
+    function calcEMI() {
+        let P = parseFloat(document.getElementById("emi_amt").value);
+        let R = parseFloat(document.getElementById("emi_rate").value) / 12 / 100;
+        let N = parseFloat(document.getElementById("emi_years").value) * 12;
+        document.getElementById("emi_amt_txt").innerText = formatINR(P);
+        document.getElementById("emi_rate_txt").innerText = document.getElementById("emi_rate").value;
+        document.getElementById("emi_years_txt").innerText = document.getElementById("emi_years").value;
+        let emi = [P * R * Math.pow(1 + R, N)] / [Math.pow(1 + R, N) - 1];
+        let totalPayable = emi * N;
+        let totalInterest = totalPayable - P;
+        document.getElementById("emi_principal").innerText = "₹" + formatINR(P);
+        document.getElementById("emi_interest").innerText = "₹" + formatINR(totalInterest);
+        document.getElementById("emi_total").innerText = "₹" + formatINR(totalPayable);
+        document.getElementById("emi_monthly").innerText = "₹" + formatINR(emi);
+    }
+
+    function calcInflation() {
+        let PV = parseFloat(document.getElementById("inf_amt").value);
+        let r = parseFloat(document.getElementById("inf_rate").value) / 100;
+        let n = parseFloat(document.getElementById("inf_years").value);
+        document.getElementById("inf_amt_txt").innerText = formatINR(PV);
+        document.getElementById("inf_rate_txt").innerText = document.getElementById("inf_rate").value;
+        document.getElementById("inf_years_txt").innerText = document.getElementById("inf_years").value;
+        let FV = PV * Math.pow(1 + r, n);
+        document.getElementById("inf_current").innerText = "₹" + formatINR(PV);
+        document.getElementById("inf_future").innerText = "₹" + formatINR(FV);
+    }
+
+    calcSIP();
 </script>
+
 </body>
 </html>
+```
+
+अब इसमें सबसे आखिरी लाइन पर `</html>` मौजूद है। जब आप इन दोनों हिस्सों को अपनी GitHub की `index.html` फ़ाइल में एक के नीचे एक पेस्ट करेंगे, तो आपका मल्टी-कैलकुलेटर पूरी तरह तैयार हो जाएगा।
+
+क्या इसे पेस्ट करने या GitHub पर सेव करने में कोई समस्या आ रही है?
+
+
+                
