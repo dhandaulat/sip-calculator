@@ -1,1 +1,247 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarkari Result Clone - Latest Jobs, Admit Card & Results</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 20px 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #cc0000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #990000;
+            border-radius: 4px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        /* 3-Column Responsive Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        /* Card / Box Styles */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-top: 4px solid #003366;
+            overflow: hidden;
+        }
+
+        .card.admit-card { border-top-color: #cc0000; }
+        .card.latest-job { border-top-color: #006633; }
+
+        .card-header {
+            padding: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .card.result .card-header { background-color: #003366; }
+        .card.admit-card .card-header { background-color: #cc0000; }
+        .card.latest-job .card-header { background-color: #006633; }
+
+        .card-content {
+            padding: 10px 0;
+        }
+
+        /* Links List Styling */
+        .job-list {
+            list-style: none;
+        }
+
+        .job-list li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .job-list li:last-child {
+            border-bottom: none;
+        }
+
+        .job-list a {
+            display: block;
+            padding: 12px 15px;
+            color: #0056b3;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .job-list a:hover {
+            background-color: #f9f9f9;
+            color: #cc0000;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #ccc;
+            text-align: center;
+            padding: 20px 10px;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* RESPONSIVE MEDIA QUERIES */
+        /* Tablet Layout (2 Columns) */
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile Layout (1 Column) */
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            nav {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav a {
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>SARKARI RESULT INFO</h1>
+        <p>Latest Online Form, Sarkari Naukri Exams, Admit Card & Results</p>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Result</a>
+        <a href="#">Admit Card</a>
+        <a href="#">Latest Jobs</a>
+        <a href="#">Syllabus</a>
+        <a href="#">Contact Us</a>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container">
+        <div class="grid-container">
+            
+            <!-- Result Column -->
+            <div class="card result">
+                <div class="card-header">Result</div>
+                <div class="card-content">
+                    <ul class="job-list">
+                        <li><a href="#">UP Police Constable Result 2026</a></li>
+                        <li><a href="#">SSC CGL Tier I Result 2026</a></li>
+                        <li><a href="#">CBSE Board Class 10th Result</a></li>
+                        <li><a href="#">IBPS PO Mains Result With Marks</a></li>
+                        <li><a href="#">Railway RRB NTPC Result</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Admit Card Column -->
+            <div class="card admit-card">
+                <div class="card-header">Admit Card</div>
+                <div class="card-content">
+                    <ul class="job-list">
+                        <li><a href="#">UPSC Civil Services Prelims Admit Card</a></li>
+                        <li><a href="#">SSC GD Constable Admit Card 2026</a></li>
+                        <li><a href="#">NTA NEET UG Exam Hall Ticket</a></li>
+                        <li><a href="#">CTET January Exam Admit Card</a></li>
+                        <li><a href="#">Indian Navy Agniveer Admit Card</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Latest Jobs Column -->
+            <div class="card latest-job">
+                <div class="card-header">Latest Jobs</div>
+                <div class="card-content">
+                    <ul class="job-list">
+                        <li><a href="#">SSC CHSL 10+2 Online Form 2026</a></li>
+                        <li><a href="#">UPPSC Review Officer RO / ARO Vacancy</a></li>
+                        <li><a href="#">Railway RPF Sub Inspector Recruitment</a></li>
+                        <li><a href="#">SBI Junior Associate (Clerk) Apply Online</a></li>
+                        <li><a href="#">India Post GDS Recruitment 2026</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2026 Sarkari Result Info. All Rights Reserved.</p>
+        <p>Disclaimer: This is a demo clone website for educational purposes.</p>
+    </footer>
+
+</body>
+</html>
